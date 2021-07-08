@@ -128,7 +128,6 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     private GLSurfaceView depthSurfaceView;
     private SampleRender depthRender;
     private GLSurfaceView surfaceView;
-    private TextView degView;
 
     private boolean installRequested;
 
@@ -193,8 +192,11 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     private int viewWidth;
     private int viewHeight;
     private float deg = 0;
+
+    private TextView degView;
     private Button autoScanBtn;
     private ScrollView scrollView;
+    private boolean autoScanMode = false;
 
     //region Implement View Event
     @Override
@@ -207,7 +209,20 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         degView = findViewById(R.id.textDeg);
         displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
 
+        //autoScanBtn初始化
         autoScanBtn = findViewById(R.id.autoScanBtn);
+        //監聽autoScanBtn onclick事件
+        //用於 (開啟/關閉) 是否要計算World Point，計算工作仍於 onDrawFrame 中完執行，避免因 frame 生命週期結束導到無法取得
+        autoScanBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        degView.append("CALCULATE World Point START");
+//                        set autoScan boolean true
+                        autoScanMode = true;
+                    }
+                });
+
         // Set up touch listener.
         tapHelper = new TapHelper(/*context=*/ this);
         surfaceView.setOnTouchListener(tapHelper);
@@ -564,26 +579,25 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         Camera camera = frame.getCamera();
 
 
-
-        autoScanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Frame frame = null;
+//        autoScanBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Frame frame = null;
+////                try {
+////                    frame = session.update();
+////                } catch (CameraNotAvailableException e) {
+////                    e.printStackTrace();
+////                }
+////                Camera camera = frame.getCamera();
 //                try {
-//                    frame = session.update();
-//                } catch (CameraNotAvailableException e) {
+////                    String num = String.valueOf(frame.getTimestamp());
+////                    degView.append(num);
+//                    autoScan(frame, camera);
+//                } catch (NotYetAvailableException | InterruptedException e) {
 //                    e.printStackTrace();
 //                }
-//                Camera camera = frame.getCamera();
-                try {
-//                    String num = String.valueOf(frame.getTimestamp());
-//                    degView.append(num);
-                    autoScan(frame, camera);
-                } catch (NotYetAvailableException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//            }
+//        });
 
         // Update BackgroundRenderer state to match the depth settings.
         try {
@@ -642,6 +656,9 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 //        firstDraw=false;
 //      }
 //    }
+
+        //autoScan
+        autoScan(frame,camera, autoScanMode);
 
         backgroundRenderer.drawBackground(render);
 
@@ -761,7 +778,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     }
 
 
-    private void toWorldCoordinate(float xcor, float ycor, Frame frame){
+    private void toWorldCoordinate(float xcor, float ycor, Frame frame) {
         float x = xcor;
         float y = ycor;
         int colSum = viewHeight;
@@ -865,25 +882,35 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         });
 
 
-
     }
 
-    private void autoScan(Frame frame, Camera camera) throws NotYetAvailableException, InterruptedException {
-        int colSum = viewHeight;
-        int rowSum = viewWidth;
+    private void autoScan(Frame frame, Camera camera, Boolean autoScanMode) throws NotYetAvailableException, InterruptedException {
+        if (autoScanMode == true) {
+//            runOnUiThread(new Runnable() {
+//
+//                @Override
+//                public void run() {
+//
+//                    // Stuff that updates the UI
+//                    degView.append("autoScan Success!");
+//
+//                }
+//            });
+            int colSum = viewHeight;
+            int rowSum = viewWidth;
 
-        for (int x=0; x<rowSum; x+=100) {
-            for (int y = 0; y < rowSum; y += 100) {
+            for (int x = 0; x < rowSum; x += 100) {
+                for (int y = 0; y < colSum; y += 100) {
 //                Thread.sleep(5*1000);
-                try {
-                    toWorldCoordinate(x, y, frame);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    try {
+                        toWorldCoordinate(x, y, frame);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
-        }
-
+    }
 
 
     // Handle only one tap per frame, as taps are usually low frequency compared to frame rate.
