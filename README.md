@@ -1,8 +1,14 @@
 # autoScan
 test for autoScan
 
+## TO-DO
+1. 建新的 Thread 用以計算 world point
+2. 利用 Queue 來換資訊
+
+**input (計算) -> 多個queue(暫放計算完資料) -> 儲存至somewhere -> draw 2d plots on somewhere**
+
 ## 進度
-* [0709]改用ToggleButton手動操作開關，驗證一次抓一個frame
+* [0709] 改用ToggleButton手動操作開關，驗證一次抓一個frame
 * [0708] 已將click事件定義於onCreate中，並用來開啟/關閉是否要計算world point的method。(Boolean autoScanMode)
 
 ### 目前遇到的問題：
