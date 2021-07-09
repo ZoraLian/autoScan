@@ -30,3 +30,5 @@ test for autoScan
 
 ## 附註
 point cloud helper 路徑：hello_ar_java\app\src\main\java\com\google\ar\core\examples\java\common\helpers
+
+toggle相關附檔：arcore-android-sdk\samples\hello_ar_java\app\src\main\res\drawable-xxhdpi
