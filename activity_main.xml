@@ -66,5 +66,15 @@
         <!--            android:orientation="vertical" />-->
     </ScrollView>
 
+    <ToggleButton
+        android:id="@+id/ToggleButton"
+        android:layout_width="114dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="38dp"
+        android:text="ToggleButton"
+        android:background="@drawable/togglebutton_selector"
+        />
+
 
 </RelativeLayout>

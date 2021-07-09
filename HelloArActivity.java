@@ -28,11 +28,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -197,6 +199,8 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
     private Button autoScanBtn;
     private ScrollView scrollView;
     private boolean autoScanMode = false;
+    private ToggleButton toggleButton;
+    private boolean toggleMode = false;
 
     //region Implement View Event
     @Override
@@ -209,6 +213,34 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         degView = findViewById(R.id.textDeg);
         displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
 
+
+        //toggleButton初始化
+        toggleButton = findViewById(R.id.ToggleButton);
+        toggleButton.setTextOff("關"); //設定未選取時的文字
+        toggleButton.setTextOn("開"); //設定選取時的文字
+        toggleButton.setChecked(toggleMode);    //設定按紐狀態 - true:選取, false:未選取 預設為false
+        //設定按紐狀態監聽器
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) //當按鈕狀態為選取時
+                {
+                    degView.append("toggleButton is " + isChecked);
+                    toggleMode = isChecked; //true
+                } else //當按鈕狀態為未選取時
+                {
+                    degView.append("toggleButton is " + isChecked);
+                    toggleMode = isChecked; //false
+
+                }
+            }
+        });
+
+
+        ;
+
         //autoScanBtn初始化
         autoScanBtn = findViewById(R.id.autoScanBtn);
         //監聽autoScanBtn onclick事件
@@ -218,18 +250,22 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
                     @Override
                     public void onClick(View v) {
                         degView.append("CALCULATE World Point START");
-//                        set autoScan boolean true
+                        //set autoScan boolean true
                         autoScanMode = true;
                     }
                 });
 
         // Set up touch listener.
-        tapHelper = new TapHelper(/*context=*/ this);
+        tapHelper = new
+
+                TapHelper(/*context=*/ this);
         surfaceView.setOnTouchListener(tapHelper);
 
 
         // Set up renderer.
-        render = new SampleRender(surfaceView, this, getAssets());
+        render = new
+
+                SampleRender(surfaceView, this, getAssets());
 //    depthRender=new SampleRender(depthSurfaceView, new SampleRender.Renderer() {
 //      @Override
 //      public void onSurfaceCreated(SampleRender render) {
@@ -658,7 +694,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 //    }
 
         //autoScan
-        autoScan(frame,camera, autoScanMode);
+        autoScan(frame, camera, toggleMode);
 
         backgroundRenderer.drawBackground(render);
 
@@ -884,8 +920,8 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 
     }
 
-    private void autoScan(Frame frame, Camera camera, Boolean autoScanMode) throws NotYetAvailableException, InterruptedException {
-        if (autoScanMode == true) {
+    private void autoScan(Frame frame, Camera camera, Boolean mode) throws NotYetAvailableException, InterruptedException {
+        if (mode == true) {
 //            runOnUiThread(new Runnable() {
 //
 //                @Override
@@ -896,6 +932,7 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 //
 //                }
 //            });
+            //width 1080 height 2195
             int colSum = viewHeight;
             int rowSum = viewWidth;
 
@@ -1242,4 +1279,5 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
         }
         session.configure(config);
     }
+
 }
