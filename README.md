@@ -1,8 +1,9 @@
 # autoScan
 test for autoScan
 
-## 0708進度
-已將click事件定義於onCreate中，並用來開啟/關閉是否要計算world point的method。(Boolean autoScanMode)
+## 進度
+* [0709]改用ToggleButton手動操作開關，驗證一次抓一個frame
+* [0708] 已將click事件定義於onCreate中，並用來開啟/關閉是否要計算world point的method。(Boolean autoScanMode)
 
 ### 目前遇到的問題：
 1. android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views. (目前已解，用runOnUiThread)
@@ -10,7 +11,7 @@ test for autoScan
 
    -> handleTap中，因為是用HitResult來做斷點，所以他設了一連串判斷式來只抓他hit那時的frame去算，
 
-      我們的需求是只抓單一一個frame？（若是，則或許可藉由再修改onClick事件的開關來下手）
+      我們的需求是只抓單一一個frame？（若是，則或許可藉由再修改onClick事件的開關來下手 -> 0709新增ToggleButton成功）
 
       還是要不斷紀錄每個frame？那麼就須解決運算量過大、卡頓->開多個thread?
 
